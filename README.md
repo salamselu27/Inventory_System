@@ -12,6 +12,8 @@ A modern, production-ready Django inventory management starter kit. Built with a
 - **Dynamic Items Tracking**: Supports basic properties for both `Raw Materials` (RM) and `Finished Goods` (FG) in a single unified system.
 - **Production Job Cards**: Interactive module to simulate producing Finished Goods by dynamically calculating and deducting Raw Material combinations (Bill of Materials).
 - **Automated Logging & Alerts**: Every transaction generates structured logs, and items falling below reorder levels are automatically flagged in an intuitive Stock Alerts dashboard.
+- **Shipment Planner**: Compute spatial requirements for shipping Finished Goods using 20ft and 40ft containers based on their registered box/sack dimensions.
+- **Insights & Trends**: Live business analysis tracking your inventory portfolio valuation and net production performance.
 
 ## 🛠️ Technology Stack
 
@@ -79,6 +81,7 @@ Ensure you have Python 3.9+ installed on your system.
 - `inventory_system/` - Django core settings and URL routing.
 - `dashboard/` - App handling the main landing pages and high-level routing.
 - `inventory/` - The core application handling CRUD logic for Job Cards, Items, and Tracking.
+- `balance/` - App containing business calculators, shipment planning, and financial insights dashboards.
 - `customers/` - Boilerplate application ready to implement customer/supplier management.
 - `static/css/theme.css` - The global design variable system driving the aesthetic UI.
 

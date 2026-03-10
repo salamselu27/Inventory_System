@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Shipment Planner | Inventory System{% endblock %}
+
+{% block content %}
+<div class="card" style="padding: 2.5rem; max-width: 1000px; margin: 0 auto;">
+    <div style="margin-bottom: 2.5rem; text-align: center;">
+        <h1 class="text-gradient" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Shipment Planner</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">Calculate container fitment for your Finished Goods using CBM (Cubic Meters).</p>
+    </div>
+
+    <div class="grid-cols-2" style="margin-bottom: 2.5rem;">
+        <!-- Selection Panel -->
+        <div class="card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05);">
+            <h3 style="margin-bottom: 1.5rem; color: var(--accent-emerald);">Select Product</h3>
+            <div class="form-group">
+                <label class="form-label">Finished Good</label>
+                <select id="product_select" class="form-input" onchange="updateProductDetails()">
+                    <option value="">-- Choose a Product --</option>
+                    {% for item in items %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div id="product_details" style="display: none; margin-top: 1.5rem; animation: fadeInUp 0.3s ease-out;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-secondary);">Dimensions:</span>
+                    <span id="product_dims" style="font-weight: 600; color: var(--text-primary);"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">CBM per Box:</span>
+                    <span id="product_cbm" style="font-weight: 600; color: var(--accent-emerald);"></span>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label class="form-label">Order Quantity (Boxes)</label>
+                <input type="number" id="order_quantity" class="form-input" placeholder="e.g. 500" oninput="calculate()">
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                <span style="color: var(--text-secondary);">Total Order CBM:</span>
+                <span id="total_order_cbm" style="font-weight: 600; color: var(--accent-blue); font-size: 1.25rem;">0.00</span>
+            </div>
+        </div>
+
+        <!-- Containers Panel -->
+        <div class="card" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05);">
+            <h3 style="margin-bottom: 1.5rem; color: #F59E0B;">Container Fitment</h3>
+            
+            <!-- 20ft Container -->
+            <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="flex-between" style="margin-bottom: 0.75rem;">
+                    <strong style="color: var(--text-primary);">20ft Standard Container</strong>
+                    <span class="badge badge-warning">~33 CBM</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="flex-grow: 1; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; overflow: hidden;">
+                        <div id="bar_20ft" style="height: 100%; background: var(--accent-emerald); width: 0%; transition: width 0.5s, background-color 0.3s;"></div>
+                    </div>
+                    <span id="pct_20ft" style="font-family: monospace; font-size: 0.9rem; min-width: 45px; text-align: right;">0%</span>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">Max capacity: <span id="max_20ft" style="color: var(--text-primary); font-weight: 500;">0</span> boxes</div>
+            </div>
+
+            <!-- 40ft Container -->
+            <div>
+                <div class="flex-between" style="margin-bottom: 0.75rem;">
+                    <strong style="color: var(--text-primary);">40ft Standard Container</strong>
+                    <span class="badge badge-primary">~67 CBM</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <div style="flex-grow: 1; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; overflow: hidden;">
+                        <div id="bar_40ft" style="height: 100%; background: var(--accent-blue); width: 0%; transition: width 0.5s, background-color 0.3s;"></div>
+                    </div>
+                    <span id="pct_40ft" style="font-family: monospace; font-size: 0.9rem; min-width: 45px; text-align: right;">0%</span>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">Max capacity: <span id="max_40ft" style="color: var(--text-primary); font-weight: 500;">0</span> boxes</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ items_json|json_script:"items-data" }}
+
+<script>
+    const itemsDataStr = document.getElementById('items-data').textContent;
+    const itemsData = JSON.parse(itemsDataStr);
+    const itemMap = {};
+    itemsData.forEach(item => { itemMap[item.id] = item; });
+    
+    let currentItem = null;
+    const VOL_20FT = 33.2; // approx 33.2 CBM for 20ft std
+    const VOL_40FT = 67.7; // approx 67.7 CBM for 40ft std
+
+    function updateProductDetails() {
+        const selectBox = document.getElementById('product_select');
+        const selectedId = selectBox.value;
+        const detailsPanel = document.getElementById('product_details');
+        
+        if (selectedId && itemMap[selectedId]) {
+            currentItem = itemMap[selectedId];
+            document.getElementById('product_dims').innerText = `${currentItem.l} x ${currentItem.w} x ${currentItem.h} cm`;
+            document.getElementById('product_cbm').innerText = currentItem.cbm;
+            
+            // Calculate max capacities
+            document.getElementById('max_20ft').innerText = Math.floor(VOL_20FT / currentItem.cbm);
+            document.getElementById('max_40ft').innerText = Math.floor(VOL_40FT / currentItem.cbm);
+            
+            detailsPanel.style.display = 'block';
+            calculate();
+        } else {
+            currentItem = null;
+            detailsPanel.style.display = 'none';
+            resetBars();
+            document.getElementById('total_order_cbm').innerText = '0.00';
+            document.getElementById('max_20ft').innerText = '0';
+            document.getElementById('max_40ft').innerText = '0';
+        }
+    }
+
+    function calculate() {
+        if (!currentItem) return;
+        
+        const qtyStr = document.getElementById('order_quantity').value;
+        const qty = parseInt(qtyStr) || 0;
+        
+        const totalCbm = qty * currentItem.cbm;
+        document.getElementById('total_order_cbm').innerText = totalCbm.toFixed(2);
+        
+        const pct20 = Math.min((totalCbm / VOL_20FT) * 100, 100);
+        const pct40 = Math.min((totalCbm / VOL_40FT) * 100, 100);
+        
+        updateBar('bar_20ft', 'pct_20ft', pct20, totalCbm > VOL_20FT);
+        updateBar('bar_40ft', 'pct_40ft', pct40, totalCbm > VOL_40FT);
+    }
+    
+    function updateBar(barId, txtId, pct, overflow) {
+        const bar = document.getElementById(barId);
+        bar.style.width = pct + '%';
+        if (overflow) {
+            bar.style.backgroundColor = 'var(--accent-red)';
+            document.getElementById(txtId).innerText = '>100%';
+            document.getElementById(txtId).style.color = 'var(--accent-red)';
+        } else {
+            bar.style.backgroundColor = barId.includes('20') ? 'var(--accent-emerald)' : 'var(--accent-blue)';
+            document.getElementById(txtId).innerText = pct.toFixed(1) + '%';
+            document.getElementById(txtId).style.color = 'inherit';
+        }
+    }
+    
+    function resetBars() {
+        document.getElementById('bar_20ft').style.width = '0%';
+        document.getElementById('bar_40ft').style.width = '0%';
+        document.getElementById('pct_20ft').innerText = '0%';
+        document.getElementById('pct_40ft').innerText = '0%';
+        document.getElementById('pct_20ft').style.color = 'inherit';
+        document.getElementById('pct_40ft').style.color = 'inherit';
+    }
+</script>
+{% endblock %}

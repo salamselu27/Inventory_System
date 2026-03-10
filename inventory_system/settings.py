@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'inventory',
     'customers',
     'dashboard',
+    'balance',
 ]
 
 MIDDLEWARE = [
@@ -127,8 +128,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Fix for Windows registry sometimes returning wrong MIME type for CSS
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

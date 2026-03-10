@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Entry Hub | Inventory System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px; margin: 0 auto; padding: 3rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="text-gradient-purple" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Entry Hub</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem;">Access all your primary data entry points below.</p>
+    </div>
+
+    <div class="grid-cols-2">
+        <a href="{% url 'add_item' %}" class="card dashboard-tile" style="padding: 1.75rem;">
+            <div class="flex-between" style="width: 100%;">
+                <div class="tile-icon" style="color: var(--accent-emerald);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 3v18"/><path d="m3.27 6.96 16.73 9.68"/><path d="m20.73 6.96-16.73 9.68"/></svg>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div>
+                <h3 style="font-size: 1.25rem;">Register Item</h3>
+                <p>New Finished Good or Raw Material</p>
+            </div>
+        </a>
+        <a href="#" class="card dashboard-tile" style="padding: 1.75rem;">
+            <div class="flex-between" style="width: 100%;">
+                <div class="tile-icon" style="color: var(--accent-blue);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div>
+                <h3 style="font-size: 1.25rem;">Inward Load</h3>
+                <p>Record Incoming Stock</p>
+            </div>
+        </a>
+        <a href="#" class="card dashboard-tile" style="padding: 1.75rem;">
+            <div class="flex-between" style="width: 100%;">
+                <div class="tile-icon" style="color: var(--accent-purple);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div>
+                <h3 style="font-size: 1.25rem;">Customer Portal</h3>
+                <p>Manage Customer Orders</p>
+            </div>
+        </a>
+        <a href="{% url 'create_job_card' %}" class="card dashboard-tile" style="padding: 1.75rem;">
+            <div class="flex-between" style="width: 100%;">
+                <div class="tile-icon" style="color: #F59E0B;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div>
+                <h3 style="font-size: 1.25rem;">Job Card</h3>
+                <p>Create Production Job</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .dashboard-tile .arrow-icon {
+        transition: transform 0.3s;
+    }
+    .dashboard-tile:hover .arrow-icon {
+        transform: translateX(4px);
+        stroke: var(--text-primary);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Job Card | Inventory System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px; margin: 0 auto;">
+    <h2 class="text-gradient-purple" style="margin-bottom: 2rem; font-size: 2rem;">Production Job Card</h2>
+
+    {% if messages %}
+    <div style="margin-bottom: 1.5rem;">
+        {% for message in messages %}
+        <div class="alert {% if 'success' in message.tags %}alert-success{% else %}alert-error{% endif %}">
+            {% if 'success' in message.tags %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'create_job_card' %}">
+        {% csrf_token %}
+
+        {% if step == 1 %}
+        <input type="hidden" name="step" value="1">
+        <div class="grid-cols-2">
+            <div class="form-group">
+                <label class="form-label">Select Finished Good</label>
+                <select name="finished_good" class="form-input" required>
+                    {% for item in fgs %}
+                    <option value="{{ item.id }}">{{ item.name }} (Current: {{ item.current_stock }} {{ item.unit }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity to Produce</label>
+                <input type="number" step="0.001" name="quantity" class="form-input" placeholder="0.000" required>
+            </div>
+        </div>
+        <div style="margin-top: 2rem; text-align: right;">
+            <button type="submit" class="btn btn-primary">
+                Calculate RMs
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+        </div>
+
+        {% elif step == 2 %}
+        <input type="hidden" name="step" value="2">
+        <input type="hidden" name="fg_id" value="{{ fg.id }}">
+        <input type="hidden" name="quantity" value="{{ quantity }}">
+
+        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="background: rgba(59, 130, 246, 0.2); padding: 0.75rem; border-radius: 0.5rem; color: var(--accent-blue);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+                <h3 style="color: var(--accent-blue); margin: 0 0 0.25rem 0; font-size: 1.1rem;">Production Plan</h3>
+                <p style="margin: 0; color: var(--text-secondary);">Producing: <strong style="color: var(--text-primary);">{{ quantity }} {{ fg.unit }}</strong> of <strong style="color: var(--text-primary);">{{ fg.name }}</strong></p>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-purple);"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>
+            Raw Material Usage
+        </h3>
+        
+        <div class="table-container" style="margin-bottom: 2rem;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Current Stock</th>
+                        <th>Required Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rm in rm_data %}
+                    <tr>
+                        <td style="font-weight: 500;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-emerald);"></div>
+                                {{ rm.name }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge {% if rm.stock >= rm.required %}badge-success{% else %}badge-danger{% endif %}">
+                                {{ rm.stock|floatformat:3 }} {{ rm.unit }}
+                            </span>
+                        </td>
+                        <td>
+                            <input type="hidden" name="rm_id" value="{{ rm.id }}">
+                            <div style="position: relative; width: 160px;">
+                                <input type="number" step="0.001" name="rm_quantity" value="{{ rm.required }}"
+                                    class="form-input" style="padding-right: 3rem;">
+                                <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 0.85rem;">{{ rm.unit }}</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); opacity: 0.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                No RMs defined in BOM. No stock deduction will occur.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="{% url 'create_job_card' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success">
+                Confirm Production
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </button>
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

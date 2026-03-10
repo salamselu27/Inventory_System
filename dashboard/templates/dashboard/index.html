@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Inventory System{% endblock %}
+
+{% block content %}
+<div class="flex-between" style="margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1 class="text-gradient" style="margin: 0; font-size: 2.25rem;">Welcome, {{ user.username|default:"Guest" }}</h1>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 1.05rem;">Overview of your production and inventory status.</p>
+    </div>
+    <div>
+        <a href="{% url 'add_item' %}" class="btn btn-primary">
+            + Quick Add
+        </a>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- 1. Entry Hub -->
+    <a href="{% url 'entry_hub' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: var(--accent-emerald);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+                    <path d="M12 3v18" />
+                    <path d="m3.27 6.96 16.73 9.68" />
+                    <path d="m20.73 6.96-16.73 9.68" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Entry Hub</h3>
+            <p>Register Items, Inward Load, Customer Portal, Job Card</p>
+        </div>
+    </a>
+
+    <!-- 2. Inventory Logs -->
+    <a href="{% url 'inventory_logs' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: var(--accent-blue);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" x2="8" y1="13" y2="13" />
+                    <line x1="16" x2="8" y1="17" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Inventory Logs</h3>
+            <p>Product & Customer Logs</p>
+        </div>
+    </a>
+
+    <!-- 3. Stock Alerts -->
+    <a href="{% url 'stock_alerts' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: var(--accent-red);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" x2="12" y1="9" y2="13" />
+                    <line x1="12" x2="12.01" y1="17" y2="17" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Stock Alerts</h3>
+            <p>Low Stock Notifications</p>
+        </div>
+    </a>
+
+    <!-- 4. Live Stock -->
+    <a href="{% url 'live_stock' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: var(--accent-emerald);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" x2="12" y1="20" y2="10" />
+                    <line x1="18" x2="18" y1="20" y2="4" />
+                    <line x1="6" x2="6" y1="20" y2="16" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Live Stock</h3>
+            <p>Master Sheet: In, Out, Stock, Avg Rate</p>
+        </div>
+    </a>
+
+    <!-- 5. Shipment Planner -->
+    <a href="{% url 'coming_soon' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: #F59E0B;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11" />
+                    <path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2" />
+                    <circle cx="7" cy="18" r="2" />
+                    <circle cx="17" cy="18" r="2" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Shipment Planner</h3>
+            <p>Container Space Calculator</p>
+        </div>
+    </a>
+
+    <!-- 6. Insights & Trends -->
+    <a href="{% url 'coming_soon' %}" class="card dashboard-tile">
+        <div class="flex-between" style="width: 100%;">
+            <div class="tile-icon" style="color: #8B5CF6;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                </svg>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div>
+            <h3>Insights & Trends</h3>
+            <p>Business Analysis & Reports</p>
+        </div>
+    </a>
+</div>
+
+<style>
+    .dashboard-tile .arrow-icon {
+        transition: transform 0.3s;
+    }
+    .dashboard-tile:hover .arrow-icon {
+        transform: translateX(4px);
+        stroke: var(--text-primary);
+    }
+</style>
+{% endblock %}

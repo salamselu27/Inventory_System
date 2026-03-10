@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Item | Inventory System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 class="text-gradient" style="margin-bottom: 2rem; font-size: 2rem;">Register New Item</h2>
+
+    {% if messages %}
+    <div style="margin-bottom: 1.5rem;">
+        {% for message in messages %}
+        <div class="alert {% if 'success' in message.tags %}alert-success{% else %}alert-error{% endif %}">
+            {% if 'success' in message.tags %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="grid-cols-2">
+            <!-- Left Column -->
+            <div class="form-group">
+                <label for="name" class="form-label">Item Name</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="code" class="form-label">Item Code (Optional)</label>
+                <input type="text" id="code" name="code" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="item_type" class="form-label">Item Type</label>
+                <select id="item_type" name="item_type" class="form-input" onchange="toggleFields()">
+                    <option value="RM">Raw Material</option>
+                    <option value="FG">Finished Good</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="unit" class="form-label">Unit</label>
+                <input type="text" id="unit" name="unit" class="form-input" value="kg" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reorder_level" class="form-label">Reorder Level</label>
+                <input type="number" step="0.001" id="reorder_level" name="reorder_level" class="form-input"
+                    placeholder="0.000">
+            </div>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.05); margin: 2rem 0;">
+
+        <!-- Dynamic Fields -->
+        <div id="fg-fields" style="display: none; animation: fadeInUp 0.3s ease-out;">
+            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-blue);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                Finished Good Details
+            </h3>
+            <div class="grid-cols-2">
+                <div class="form-group">
+                    <label class="form-label">Sack Height (cm)</label>
+                    <input type="number" name="sack_h" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sack Width (cm)</label>
+                    <input type="number" name="sack_w" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sack Length (cm)</label>
+                    <input type="number" name="sack_l" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <div id="rm-fields" style="animation: fadeInUp 0.3s ease-out;">
+            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-emerald);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>
+                Raw Material Details
+            </h3>
+            <div class="form-group">
+                <label class="form-label">Usage Type</label>
+                <div style="display: flex; gap: 1.5rem; align-items: center; margin-top: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="radio" name="usage_type" value="Blending" checked style="accent-color: var(--accent-emerald); width: 1.2rem; height: 1.2rem;"> 
+                        <span>Blending</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="radio" name="usage_type" value="Packing" style="accent-color: var(--accent-emerald); width: 1.2rem; height: 1.2rem;"> 
+                        <span>Packing</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="{% url 'entry_hub' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                Register Item
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleFields() {
+        const type = document.getElementById('item_type').value;
+        const fgFields = document.getElementById('fg-fields');
+        const rmFields = document.getElementById('rm-fields');
+
+        if (type === 'FG') {
+            fgFields.style.display = 'block';
+            rmFields.style.display = 'none';
+        } else {
+            fgFields.style.display = 'none';
+            rmFields.style.display = 'block';
+        }
+    }
+
+    // Initial call
+    toggleFields();
+</script>
+{% endblock %}

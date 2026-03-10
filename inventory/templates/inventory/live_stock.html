@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Stock | Inventory System{% endblock %}
+
+{% block content %}
+<div class="card" style="padding: 2.5rem;">
+    <div class="flex-between" style="margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="text-gradient" style="margin: 0; font-size: 2rem;">Live Stock Master Sheet</h1>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Real-time view of your current inventory levels.</p>
+        </div>
+        <div>
+            <a href="{% url 'add_item' %}" class="btn btn-primary">
+                + Add Item
+            </a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Type</th>
+                    <th>Current Stock</th>
+                    <th>Avg Rate</th>
+                    <th>Valuation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="font-weight: 500;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background-color: {% if item.item_type == 'FG' %}var(--accent-blue){% else %}var(--accent-emerald){% endif %};"></div>
+                            {{ item.name }}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge {% if item.item_type == 'FG' %}badge-primary{% else %}badge-success{% endif %}">
+                            {{ item.get_item_type_display }}
+                        </span>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-primary);">
+                        {{ item.current_stock|floatformat:3 }} <span style="color: var(--text-muted); font-size: 0.85em;">{{ item.unit }}</span>
+                    </td>
+                    <td style="color: var(--text-secondary);">
+                        <span style="opacity: 0.7;">$</span>{{ item.avg_rate|floatformat:2 }}
+                    </td>
+                    <td style="color: var(--text-muted);">
+                        <!-- Valuation calculation prototype -->
+                        --
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 4rem; text-align: center; color: var(--text-muted);">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>
+                            <span style="font-size: 1.1rem; color: var(--text-secondary);">No items found in stock.</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -6,8 +6,8 @@ django.setup()
 
 from django.contrib.auth.models import User
 
-username = 'Admin'
-password = 'password'  # You might want to change this or ask user, but usually 'admin' or 'password' is standard dev.
+username = 'admin'
+password = 'admin'  # Default user credentials as requested
 email = 'admin@example.com'
 
 if not User.objects.filter(username=username).exists():

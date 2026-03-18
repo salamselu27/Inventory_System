@@ -4,6 +4,22 @@ A modern, production-ready Django inventory management starter kit. Built with a
 
 ![Dashboard Preview](docs/dashboard-preview.png) *(Preview graphic illustrative of the UI)*
 
+## 🖼️ Application Screenshots
+
+Here are some glimpses of the application's premium aesthetic and functionality:
+
+### Login
+![Login Screen](docs/images/login.png)
+
+### Entry Hub
+![Entry Hub](docs/images/entry_hub.png)
+
+### Live Stock
+![Live Stock Master Sheet](docs/images/live_stock.png)
+
+### Shipment Planner
+![Shipment Planner](docs/images/shipment_planner.png)
+
 ## 🌟 Key Features
 
 - **Sleek Aesthetic UI**: Deep slate dark mode, glassmorphism cards, animated glowing gradients, and polished vector icons.

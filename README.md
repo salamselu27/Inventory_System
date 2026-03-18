@@ -1,5 +1,6 @@
-# Premium Inventory System Starter Build
+# Premium Inventory System
 
+## 📖 About
 A modern, production-ready Django inventory management starter kit. Built with a focus on **premium aesthetics** without the overhead of heavy JavaScript frameworks, it leverages full-potential Vanilla CSS—making it an ideal beginner-friendly "rookie" foundation that scales flawlessly.
 
 ![Dashboard Preview](docs/dashboard-preview.png) *(Preview graphic illustrative of the UI)*

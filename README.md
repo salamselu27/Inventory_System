@@ -3,23 +3,23 @@
 ## 📖 About
 A modern, production-ready Django inventory management starter kit. Built with a focus on **premium aesthetics** without the overhead of heavy JavaScript frameworks, it leverages full-potential Vanilla CSS—making it an ideal beginner-friendly "rookie" foundation that scales flawlessly.
 
-![Dashboard Preview](docs/dashboard-preview.png) *(Preview graphic illustrative of the UI)*
+![Dashboard Preview](docs/images/dashboard.png) *(Preview graphic illustrative of the UI)*
 
 ## 🖼️ Application Screenshots
 
 Here are some glimpses of the application's premium aesthetic and functionality:
 
 ### Login
-![Login Screen](docs/images/login.png)
+![Login Screen](docs/images/loginpage.png)
 
 ### Entry Hub
-![Entry Hub](docs/images/entry_hub.png)
+![Entry Hub](docs/images/entryhub.png)
 
 ### Live Stock
 ![Live Stock Master Sheet](docs/images/live_stock.png)
 
 ### Shipment Planner
-![Shipment Planner](docs/images/shipment_planner.png)
+![Shipment Planner](docs/images/shipmentplanner.png)
 
 ## 🌟 Key Features
 
